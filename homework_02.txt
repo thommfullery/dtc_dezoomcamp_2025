@@ -1,0 +1,45 @@
+1) Within the execution for Yellow Taxi data for the year 2020 and month 12: what is the uncompressed file size (i.e. the output file yellow_tripdata_2020-12.csv of the ex\
+tract task)?
+
+  Within GCP, go to Cloud Storage > Buckets and search for the yellow_tripdata_2020-12.csv file under the Name column. Next to this is a Size column, where we find our ans\
+wer.
+
+Answer: 128.3 MB
+
+2) What is the rendered value of the variable file when the inputs taxi is set to green, year is set to 2020, and month is set to 04 during execution?
+
+Answer: green_tripdata_2020-04.csv
+
+3) How many rows are there for the Yellow Taxi data for all CSV files in the year 2020?
+
+  SELECT count(*) FROM `ny-rides-thomm-fullery.zoomcamp.yellow_tripdata` where filename like 'yellow_tripdata_2020-%.csv';
+
+Answer: 24648499
+
+4) How many rows are there for the Green Taxi data for all CSV files in the year 2020?
+
+  SELECT count(*) FROM `ny-rides-thomm-fullery.zoomcamp.green_tripdata` where filename like 'green_tripdata_2020-%.csv';
+
+Answer: 1734051
+
+5) How many rows are there for the Yellow Taxi data for the March 2021 CSV file?
+
+  To complete this load, we'll need to either modify the yaml in the 06_gcp_taxi inputs for year to allow 2001 in the dropdown or ensure that the "ensureCustomValue" prope\
+rty in year is set to true to allow us to type in 2021 manually when running the flow.
+
+  SELECT count(*) FROM `ny-rides-thomm-fullery.zoomcamp.yellow_tripdata` where filename = 'yellow_tripdata_2021-03.csv';
+
+Answer: 1925152
+
+6) How would you configure the timezone to New York in a Schedule trigger?
+
+  See: https://kestra.io/docs/workflow-components/triggers/schedule-trigger
+
+  Add timezone property to our triggers yaml:
+
+Answer:
+   triggers:
+    - id: daily
+      type: io.kestra.plugin.core.trigger.Schedule
+      cron: "@daily"
+      timezone: America/New_York
