@@ -50,6 +50,11 @@ from {{ source('raw_nyc_tripdata', 'ext_green_taxi' ) }}
 - `select * from myproject.my_nyc_tripdata.ext_green_taxi`
 - `select * from dtc_zoomcamp_2025.raw_nyc_tripdata.green_taxi`
 
+### Answer 1: Understanding dbt model resolution
+
+```sql
+select * from `dtc_zoomcamp_2025.raw_nyc_tripdata.ext_green_taxi`
+```
 
 ### Question 2: dbt Variables & Dynamic Models
 
@@ -72,7 +77,12 @@ What would you change to accomplish that in a such way that command line argumen
 - Update the WHERE clause to `pickup_datetime >= CURRENT_DATE - INTERVAL '{{ var("days_back", env_var("DAYS_BACK", "30")) }}' DAY`
 - Update the WHERE clause to `pickup_datetime >= CURRENT_DATE - INTERVAL '{{ env_var("DAYS_BACK", var("days_back", "30")) }}' DAY`
 
+### Answer 2: dbt Variables & Dynamic Models
 
+Confusingly worded question. 
+```sql
+WHERE pickup_date
+```
 ### Question 3: dbt Data Lineage and Execution
 
 Considering the data lineage below **and** that taxi_zone_lookup is the **only** materialization build (from a .csv seed file):
@@ -87,6 +97,8 @@ Select the option that does **NOT** apply for materializing `fct_taxi_monthly_zo
 - `dbt run --select +models/core/`
 - `dbt run --select models/staging/+`
 
+
+### Answer 3: dbt Data Lineage and Execution
 
 ### Question 4: dbt Macros and Jinja
 
@@ -135,6 +147,7 @@ So, without any further do, let's get started...
 
 You might want to add some new dimensions `year` (e.g.: 2019, 2020), `quarter` (1, 2, 3, 4), `year_quarter` (e.g.: `2019/Q1`, `2019-Q2`), and `month` (e.g.: 1, 2, ..., 12), **extracted from pickup_datetime**, to your `fct_taxi_trips` OR `dim_taxi_trips.sql` models to facilitate filtering your queries
 
+### Answer 4: dbt Macros and Jinja
 
 ### Question 5: Taxi Quarterly Revenue Growth
 
@@ -153,6 +166,8 @@ Considering the YoY Growth in 2020, which were the yearly quarters with the best
 - green: {best: 2020/Q1, worst: 2020/Q2}, yellow: {best: 2020/Q3, worst: 2020/Q4}
 
 
+### Answer 5: Taxi Quarterly Revenue Growth
+
 ### Question 6: P97/P95/P90 Taxi Monthly Fare
 
 1. Create a new model `fct_taxi_trips_monthly_fare_p95.sql`
@@ -167,6 +182,8 @@ Now, what are the values of `p97`, `p95`, `p90` for Green Taxi and Yellow Taxi, 
 - green: {p97: 40.0, p95: 33.0, p90: 24.5}, yellow: {p97: 31.5, p95: 25.5, p90: 19.0}
 - green: {p97: 55.0, p95: 45.0, p90: 26.5}, yellow: {p97: 52.0, p95: 25.5, p90: 19.0}
 
+
+### Question 6: P97/P95/P90 Taxi Monthly Fare
 
 ### Question 7: Top #Nth longest P90 travel time Location for FHV
 
@@ -187,6 +204,9 @@ For the Trips that **respectively** started from `Newark Airport`, `SoHo`, and `
 - LaGuardia Airport, Saint Albans, Howard Beach
 - LaGuardia Airport, Rosedale, Bath Beach
 - LaGuardia Airport, Yorkville East, Greenpoint
+
+
+### Question 7: Top #Nth longest P90 travel time Location for FHV
 
 
 ## Submitting the solutions
