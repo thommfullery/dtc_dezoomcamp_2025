@@ -68,6 +68,26 @@ models:
         data_type: timestamp
         description: ""
 
+      - name: pickup_year
+        data_type: int64
+        description: The year the meter was engaged.
+          
+      - name: pickup_quarter
+        data_type: string
+        description: The quarter the meter was engaged.
+
+      - name: pickup_year_quarter
+        data_type: string
+        description: The year and quarter the meter was engaged.
+
+      - name: pickup_month
+        data_type: int64
+        description: The month the meter was engaged.
+          
+      - name: pickup_year_month
+        data_type: string
+        description: The year and month the meter was engaged.
+
       - name: dropoff_datetime
         data_type: timestamp
         description: ""
@@ -127,3 +147,19 @@ models:
       - name: payment_type_description
         data_type: string
         description: ""
+      
+  - name: fct_taxi_trips_quarterly_revenue
+    description: >
+      Quarterly Revenue per service_type
+    columns:
+      - name: service_type
+        data_type: string
+        description: ""
+
+      - name: pickup_year_quarter
+        data_type: string
+        description: "Year and Quarter of reported revenue"
+
+      - name: revenue
+        data_type: string
+        description: "Sum of total_amount over the given quarter for the given service_type"

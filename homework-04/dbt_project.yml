@@ -35,6 +35,6 @@ clean-targets: # directories to be removed by `dbt clean`
 
 models:
   zoomcamp_hw4:
-    # Applies to all files under models/example/
-    example:
+    # Applies to all files under models/core/
+    core:
       +materialized: table
