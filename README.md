@@ -6,3 +6,5 @@ DataTalks.Club Data Engineering Zoomcamp Homework
 [Data Warehousing: homework_03.txt](homework_03.txt)
 
 [dlt Workshop: dlt_workshop.md](dlt_workshop.md)
+
+[Analytics Engineering: homework_04.md](homework_04.md)
