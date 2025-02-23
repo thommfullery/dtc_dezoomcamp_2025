@@ -27,3 +27,5 @@ with trips_data as (
 
     from trips_data
     group by 1,2,3
+
+-- dbt build --vars '{'is_test_run': 'false'}'
