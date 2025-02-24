@@ -1,4 +1,4 @@
-## Module 4 Homework
+## Module 4 Homework (Thomm Fullery's Solution)
 
 For this homework, you will need the following datasets:
 * [Green Taxi dataset (2019 and 2020)](https://github.com/DataTalksClub/nyc-tlc-data/releases/tag/green)
@@ -224,6 +224,37 @@ Considering the YoY Growth in 2020, which were the yearly quarters with the best
 
 ### Answer 5: Taxi Quarterly Revenue Growth
 
+I found the answers with the following queries.
+
+```sql
+SELECT
+    *
+  FROM
+   `ny-rides-thomm-fullery.dbt_nritter.fct_taxi_trips_quarterly_revenue`
+ WHERE
+    pickup_year = 2020
+   AND
+    service_type = 'Yellow'
+ ORDER BY
+    revenue_growth desc;
+-- Best: Q1. Worst: Q2
+SELECT
+    *
+  FROM
+   `ny-rides-thomm-fullery.dbt_nritter.fct_taxi_trips_quarterly_revenue`
+ WHERE
+    pickup_year = 2020
+   AND
+    service_type = 'Green'
+ ORDER BY
+    revenue_growth desc;
+-- Best: Q1. Worst: Q2
+```
+
+So, my answer is the fourth option:
+
+**- green: {best: 2020/Q1, worst: 2020/Q2}, yellow: {best: 2020/Q1, worst: 2020/Q2}**
+
 ### Question 6: P97/P95/P90 Taxi Monthly Fare
 
 1. Create a new model `fct_taxi_trips_monthly_fare_p95.sql`
@@ -238,8 +269,48 @@ Now, what are the values of `p97`, `p95`, `p90` for Green Taxi and Yellow Taxi, 
 - green: {p97: 40.0, p95: 33.0, p90: 24.5}, yellow: {p97: 31.5, p95: 25.5, p90: 19.0}
 - green: {p97: 55.0, p95: 45.0, p90: 26.5}, yellow: {p97: 52.0, p95: 25.5, p90: 19.0}
 
+### Answer 6: P97/P95/P90 Taxi Monthly Fare
 
-### Question 6: P97/P95/P90 Taxi Monthly Fare
+I've arrived at the answers via query, but haven't yet driven those into the model. I still need to do that. But, for now, I have:
+
+```sql
+SELECT percentiles[offset(90)], percentiles[offset(95)], percentiles[offset(97)]
+FROM (
+  SELECT APPROX_QUANTILES(fare_amount, 100) percentiles
+   FROM `ny-rides-thomm-fullery.dbt_nritter.fact_trips` 
+   where 
+      service_type = 'Yellow' and pickup_year = 2020 and pickup_month = 4
+    and
+      fare_amount is not null and fare_amount > 0
+    and
+      trip_distance is not null and trip_distance > 0
+    and
+      lower(payment_type_description) in ('cash', 'credit card')
+);
+-- P90 = 19
+-- P95 = 25.5
+-- P97 = 31.5
+---
+SELECT percentiles[offset(90)], percentiles[offset(95)], percentiles[offset(97)]
+FROM (
+  SELECT APPROX_QUANTILES(fare_amount, 100) percentiles
+   FROM `ny-rides-thomm-fullery.dbt_nritter.fact_trips` 
+   where 
+      service_type = 'Green' and pickup_year = 2020 and pickup_month = 4
+    and
+      fare_amount is not null and fare_amount > 0
+    and
+      trip_distance is not null and trip_distance > 0
+    and
+      lower(payment_type_description) in ('cash', 'credit card')
+);
+-- P90 = 26.5
+-- P95 = 45
+-- P97 = 55
+```
+So, my choice is the second option:
+
+**- green: {p97: 55.0, p95: 45.0, p90: 26.5}, yellow: {p97: 31.5, p95: 25.5, p90: 19.0}**
 
 ### Question 7: Top #Nth longest P90 travel time Location for FHV
 
@@ -261,9 +332,42 @@ For the Trips that **respectively** started from `Newark Airport`, `SoHo`, and `
 - LaGuardia Airport, Rosedale, Bath Beach
 - LaGuardia Airport, Yorkville East, Greenpoint
 
+### Answer 7: Top #Nth longest P90 travel time Location for FHV
 
-### Question 7: Top #Nth longest P90 travel time Location for FHV
+Here again, I haven't driven my queries into the data model yet. The CTE x below should become part of the model going forward.
 
+```sql
+with x as (
+     select
+     	distinct pickup_zone,
+	dropoff_zone,
+	pickup_year,
+	pickup_month,
+  	percentile_cont(trip_duration, 0.9) over(partition by pickup_zone, dropoff_zone, pickup_year, pickup_month) percentile
+        from `ny-rides-thomm-fullery.dbt_nritter.fct_fhv_monthly_zone_traveltime_p90`
+)
+select
+	*
+  from
+	x
+ where
+	pickup_year = 2019
+   and
+	pickup_month = 11
+   and
+	--pickup_zone in ('Newark Airport', 'SoHo', 'Yorkville East');
+  --pickup_zone = 'Newark Airport'
+  --pickup_zone = 'SoHo'
+    pickup_zone = 'Yorkville East'
+ order by
+    pickup_zone, percentile desc;
+-- Newark Airport -> LaGuardia Airport
+-- SoHo -> Chinatown
+-- Yorkville East -> Garment District
+```
+I ran this query and pulled the results based on the second row of the individual return sets. Based on that, my choice was the first option:
+
+**- LaGuardia Airport, Chinatown, Garment District**
 
 ## Submitting the solutions
 
