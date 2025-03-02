@@ -8,3 +8,5 @@ DataTalks.Club Data Engineering Zoomcamp Homework
 [dlt Workshop: dlt_workshop.md](dlt_workshop.md)
 
 [Analytics Engineering: homework_04.md](homework_04.md)
+
+[Batch Processing: homework_05.md](homework_05.md)
