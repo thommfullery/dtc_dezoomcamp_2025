@@ -30,7 +30,7 @@ Welcome to
       ____              __
      / __/__  ___ _____/ /__
     _\ \/ _ \/ _ `/ __/  '_/
-   /___/ .__/\_,_/_/ /_/\_\   version 3.5.5
+   /___/ .__/\_,_/_/ /_/\_\   version 3.3.2
       /_/
 ```
 ## Question 2: Yellow October 2024
@@ -46,6 +46,42 @@ What is the average size of the Parquet (ending with .parquet extension) Files t
 - 75MB
 - 100MB
 
+
+## Question 2: Yellow October 2024
+First, we need to create the partitioned parquet files:
+
+```python
+import pyspark
+from pyspark.sql import SparkSession
+from pyspark.sql import functions as F
+
+spark = SparkSession.builder \
+    .master("local[*]") \
+    .appName('test') \
+    .getOrCreate()
+
+df = spark.read \
+    .option("header", "true") \
+    .parquet('yellow_tripdata_2024-10.parquet')
+
+df = df.repartition(4)
+
+df.show()
+
+df.write.parquet('yellow/2024/10')
+```
+Now, we need to examine them:
+
+```bash
+$ du -h yellow/2024/10/part-0000*parquet
+25M     yellow/2024/10/part-00000-bee115f0-917c-4f38-8c86-1049ed10aa9c-c000.snappy.parquet
+25M     yellow/2024/10/part-00001-bee115f0-917c-4f38-8c86-1049ed10aa9c-c000.snappy.parquet
+25M     yellow/2024/10/part-00002-bee115f0-917c-4f38-8c86-1049ed10aa9c-c000.snappy.parquet
+25M     yellow/2024/10/part-00003-bee115f0-917c-4f38-8c86-1049ed10aa9c-c000.snappy.parquet
+$
+```
+
+So, my answer is the section option: **25 MB**.
 
 ## Question 3: Count records 
 
