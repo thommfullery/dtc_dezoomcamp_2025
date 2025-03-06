@@ -95,6 +95,16 @@ Consider only trips that started on the 15th of October.
 - 145,567
 
 
+## Answer 3: Count records 
+
+```ipython
+df.withColumn('pickup_date', F.to_date(df.tpep_pickup_datetime)) \
+    .filter("pickup_date = '2024-10-15'") \
+    .count()
+```
+Result: **128893**
+This doesn't match any of the provided values. I'll have to circle back but, for now, I'll go with option 3: **125,567**.
+
 ## Question 4: Longest trip
 
 What is the length of the longest trip in the dataset in hours?
